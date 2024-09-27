@@ -1,0 +1,3 @@
+Poner comentarios al código
+Cambiarle el diseño gráfico de lo que se muestra en pantalla (colores mostrados al reconocer mano)
+Organizarlo para repartirnos la explicación

@@ -26,7 +26,7 @@ while True:
     blurred = cv2.GaussianBlur(hsv, (11, 11), 0)
 
     # Definir el rango de color que queremos detectar (en el espacio HSV)
-    colourLower = np.array([53, 55, 209])  # Limite inferior para el color
+    colourLower = np.array([22, 107, 172])  # Limite inferior para el color
     colourUpper = np.array([180, 255, 255])  # Límite superior para el color
 
     # Obtener las dimensiones de la imagen (alto y ancho)
@@ -41,14 +41,14 @@ while True:
 
     # Dividir la imagen en dos regiones de interés: parte superior e inferior
     upContour = mask[0:height//2, 0:width]  # Región superior (para el control de dirección)
-    downContour = mask[3*height//4:height, 2*width//5:3*width//5]  # Región inferior (para el control de "nitro")
+    #downContour = mask[3*height//4:height, 2*width//5:3*width//5]  # Región inferior (para el control de "nitro")
 
     # Encontrar contornos en ambas regiones
     cnts_up = cv2.findContours(upContour, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts_up = imutils.grab_contours(cnts_up)  # Convertir en formato utilizable
 
-    cnts_down = cv2.findContours(downContour, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cnts_down = imutils.grab_contours(cnts_down)
+    #cnts_down = cv2.findContours(downContour, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    #cnts_down = imutils.grab_contours(cnts_down)
 
     # Si se detecta un contorno en la parte superior (decidir dirección del coche)
     if len(cnts_up) > 0:
@@ -67,20 +67,22 @@ while True:
             currentKey.append(D)
 
     # Si se detecta un contorno en la parte inferior (activar "nitro")
+    '''
     if len(cnts_down) > 0:
         PressKey(Space)  # Presiona la tecla 'Space' para activar "nitro"
         key_pressed = True
         currentKey.append(Space)
+    '''
 
     # Dibujar rectángulos y etiquetas para las zonas de control en la imagen
-    img = cv2.rectangle(img, (0, 0), (width // 2 - 35, height // 2), (0, 255, 0), 1)
+    img = cv2.rectangle(img, (0, 0), (width // 2 - 35, height), (0, 255, 0), 1)
     cv2.putText(img, 'LEFT', (110, 30), cv2.FONT_HERSHEY_DUPLEX, 1, (139, 0, 0))  # Zona izquierda
 
-    img = cv2.rectangle(img, (width // 2 + 35, 0), (width, height // 2), (0, 255, 0), 1)
+    img = cv2.rectangle(img, (width // 2 + 35, 0), (width, height), (0, 255, 0), 1)
     cv2.putText(img, 'RIGHT', (440, 30), cv2.FONT_HERSHEY_DUPLEX, 1, (139, 0, 0))  # Zona derecha
 
-    img = cv2.rectangle(img, (2 * (width // 5), 3 * (height // 4)), (3 * width // 5, height), (0, 255, 0), 1)
-    cv2.putText(img, 'NITRO', (2 * (width // 5) + 20, height - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (139, 0, 0))  # Zona nitro
+    #img = cv2.rectangle(img, (2 * (width // 5), 3 * (height // 4)), (3 * width // 5, height), (0, 255, 0), 1)
+    #cv2.putText(img, 'NITRO', (2 * (width // 5) + 20, height - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (139, 0, 0))  # Zona nitro
 
     # Mostrar la imagen procesada con las zonas dibujadas
     cv2.imshow("Steering", img)

@@ -1,14 +1,21 @@
+# direct inputs
+# source to this solution and code:
+# http://stackoverflow.com/questions/14489013/simulate-python-keypresses-for-controlling-a-game
+# http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
+
 import ctypes
 import time
 
 SendInput = ctypes.windll.user32.SendInput
 
 
-right_pressed=0x4D
+W = 0x11
+A = 0x1E
+S = 0x1F
+D = 0x20
+Space = 0x39
 
-left_pressed=0x4B
-
-# C struct redefinitions 
+# C struct redefinitions
 PUL = ctypes.POINTER(ctypes.c_ulong)
 class KeyBdInput(ctypes.Structure):
     _fields_ = [("wVk", ctypes.c_ushort),
@@ -39,23 +46,24 @@ class Input(ctypes.Structure):
     _fields_ = [("type", ctypes.c_ulong),
                 ("ii", Input_I)]
 
+# Actuals Functions
+
 def PressKey(hexKeyCode):
-	extra = ctypes.c_ulong(0)
-	ii_ = Input_I()
-	ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0001 | 0x0008, 0, ctypes.pointer(extra) )
-	x = Input( ctypes.c_ulong(1), ii_ )
-	ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+    extra = ctypes.c_ulong(0)
+    ii_ = Input_I()
+    ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra) )
+    x = Input( ctypes.c_ulong(1), ii_ )
+    ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 def ReleaseKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
-    ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0001 | 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
+    ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
     x = Input( ctypes.c_ulong(1), ii_ )
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
-if __name__=='__main__':
-	while (True):
-		PressKey(0x11)
-		time.sleep(1)
-		ReleaseKey(0x11)
-		time.sleep(1)
+if __name__ == '__main__':
+    PressKey(0x11)
+    time.sleep(1)
+    ReleaseKey(0x11)
+    time.sleep(1)

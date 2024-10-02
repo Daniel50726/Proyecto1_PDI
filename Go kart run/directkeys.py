@@ -5,11 +5,10 @@ import time
 SendInput = ctypes.windll.user32.SendInput
 
 # Definir los códigos de teclado escaneados para las teclas que se desean simular
-W = 0x11  # Código para la tecla 'W'
+#W = 0x11  # Código para la tecla 'W'
 A = 0x1E  # Código para la tecla 'A'
-S = 0x1F  # Código para la tecla 'S'
+#S = 0x1F  # Código para la tecla 'S'
 D = 0x20  # Código para la tecla 'D'
-Space = 0x39  # Código para la barra espaciadora
 
 # Redefinir la estructura de teclado (KeyBdInput) en formato C para usarla con ctypes
 PUL = ctypes.POINTER(ctypes.c_ulong)  # Tipo de puntero para los campos de información extra
@@ -74,8 +73,10 @@ def ReleaseKey(hexKeyCode):
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))  # Enviar el input
 
 # Código de prueba que presiona y luego libera la tecla 'W'
+'''
 if __name__ == '__main__':
     PressKey(W)  # Simular la presión de la tecla 'W'
     time.sleep(1)  # Esperar 1 segundo con la tecla presionada
     ReleaseKey(W)  # Simular la liberación de la tecla 'W'
     time.sleep(1)  # Esperar 1 segundo antes de finalizar
+'''

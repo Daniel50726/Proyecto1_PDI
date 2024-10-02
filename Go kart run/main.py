@@ -4,10 +4,15 @@ import cv2  # Para procesamiento de imágenes
 import imutils  # Para funciones auxiliares de imágenes y video
 from imutils.video import VideoStream  # Para capturar video desde la cámara
 from directkeys import PressKey, A, D, ReleaseKey  # Para emular las teclas del teclado
+import time
 
 # Inicializa el stream de video desde la cámara
 cam = VideoStream(src=0).start()
 currentKey = list()  # Lista para almacenar las teclas que están presionadas actualmente
+
+# Define un temporizador para limitar la frecuencia de pulsación de teclas
+last_pressed_time = time.time()  # Inicializa el tiempo de la última pulsación
+key_press_interval = 0.02  # Intervalo de 0.8 segundos entre pulsaciones
 
 # Bucle principal
 while True:
@@ -26,7 +31,7 @@ while True:
     blurred = cv2.GaussianBlur(hsv, (15,15), 0)
 
     # Definir el rango de color que queremos detectar (en el espacio HSV)
-    colourLower = np.array([124, 47, 143])
+    colourLower = np.array([167, 150, 116])
     colourUpper = np.array([180, 255, 255])
 
     # Obtener las dimensiones de la imagen (alto y ancho)
@@ -52,14 +57,16 @@ while True:
         cX = int(M["m10"] / (M["m00"] + 0.000001))  # Evitar división por cero
 
         # Determinar la dirección del coche basado en la posición del objeto
-        if cX < (width // 2 - 35):  # Si el centroide está a la izquierda
-            PressKey(A)  # Presiona la tecla 'A' para girar a la izquierda
-            key_pressed = True
-            currentKey.append(A)
-        elif cX > (width // 2 + 35):  # Si el centroide está a la derecha
-            PressKey(D)  # Presiona la tecla 'D' para girar a la derecha
-            key_pressed = True
-            currentKey.append(D)
+        if time.time() - last_pressed_time > key_press_interval:  # Verifica si ha pasado suficiente tiempo
+            if cX < (width // 2 - 35):  # Si el centroide está a la izquierda
+                PressKey(A)  # Presiona la tecla 'A' para girar a la izquierda
+                key_pressed = True
+                currentKey.append(A)
+            elif cX > (width // 2 + 35):  # Si el centroide está a la derecha
+                PressKey(D)  # Presiona la tecla 'D' para girar a la derecha
+                key_pressed = True
+                currentKey.append(D)
+            last_pressed_time = time.time()  # Actualiza el tiempo de la última pulsación
 
     # Dibujar rectángulos y etiquetas para las zonas de control en la imagen
     img = cv2.rectangle(img, (0, 0), (width // 2 - 35, height), (0, 255, 0), 1)

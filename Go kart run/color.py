@@ -1,3 +1,13 @@
+"""
+Proyecto 1 de PDI
+Presentado por los estudiantes:
+             Jorge Sebastian Arroyo Estrada     sebastian.arroyo1@udea.edu.co
+             CC:1193482707
+             Daniel Felipe Yépez Taimal         daniel.yepez@udea.edu.co
+             CC:1004193180
+Proposito: Profundizar y aplicar los conceptos de PDI en un juego interactivo
+"""
+
 import cv2
 import numpy as np
 
